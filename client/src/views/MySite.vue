@@ -269,6 +269,7 @@
             </div>
         </div>
         <Reader v-if="inReader" />
+
     </div>
   </div>
 </template>
@@ -277,6 +278,7 @@
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Reader from '../components/Reader'
+import { config } from '../config'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -401,7 +403,7 @@ export default {
 
             axios({
                 method: 'patch',
-                url: `http://localhost:3000/unfollow/${id}`,
+                url: `${config.host}/unfollow/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -419,7 +421,7 @@ export default {
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/following`,
+                url: `${config.host}/following`,
                 headers: {token}
             })  
                 .then(({data}) => {
@@ -429,7 +431,7 @@ export default {
         createTag() {
             axios({
                 method: 'post',
-                url: `http://localhost:3000/tags`,
+                url: `${config.host}/tags`,
                 data: {
                     name: this.newTag.name
                 }
@@ -451,7 +453,7 @@ export default {
         displayTags() {
             axios({
                 method: 'get',
-                url: `http://localhost:3000/tags`
+                url: `${config.host}/tags`
             })
                 .then(({data}) => {
                     this.tagsData = data.sort((a, b) => (a.name > b.name) ? 1 : -1)
@@ -475,7 +477,7 @@ export default {
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/posts`,
+                url: `${config.host}/posts`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -489,7 +491,7 @@ export default {
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/tags/${id}`,
+                url: `${config.host}/tags/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -514,7 +516,7 @@ export default {
                 tagsBody.push(this.newPost.tags[i].id)
             }
 
-            axios.post(`http://localhost:3000/img/upload`, formData, {})
+            axios.post(`${config.host}/img/upload`, formData, {})
                 .then((image) => {
                     if (image === null || image == undefined) {
                         image = 'none'
@@ -522,7 +524,7 @@ export default {
                     
                 axios({
                     method: 'post',
-                    url: `http://localhost:3000/posts`,
+                    url: `${config.host}/posts`,
                     data: {
                         title: this.newPost.title,
                         content: this.newPost.content,
@@ -568,7 +570,7 @@ export default {
                 tagsBody.push(this.editPost.tags[i]._id)
             }
 
-            axios.post(`http://localhost:3000/img/upload`, formData, {})
+            axios.post(`${config.host}/img/upload`, formData, {})
                 .then((image) => {
                     if(!image) {
                         imageBody = this.editPost.img
@@ -577,7 +579,7 @@ export default {
                     }
                     axios({
                         method: 'put',
-                        url: `http://localhost:3000/posts/${id}`,
+                        url: `${config.host}/posts/${id}`,
                         headers: {token},
                         data: {
                             title: this.editPost.title,
@@ -603,7 +605,7 @@ export default {
 
             axios({
                 method: 'delete',
-                url: `http://localhost:3000/posts/${id}`,
+                url: `${config.host}/posts/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -656,7 +658,7 @@ export default {
 }
 #mysite {
     background-color: #F6F7F7;
-    height: 1400px;
+    height: 2000px;
 }
 .container {
 	padding-top: 20px;

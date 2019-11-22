@@ -4,7 +4,7 @@
             <nav id="nav" class="navbar navbar-dark">
                 <div id="nav-container">
                     <img id="nav-logo" src="https://i.imgur.com/gMfJ8nX.png" alt="" srcset="">
-                    <h3 style="color: white; font-weight: bold; margin-left: 5px">WordCross</h3>
+                    <h3 style="color: white; font-weight: bold; margin-left: 5px; margin-bottom: 0px;">WordCross</h3>
                 </div>
             </nav>
         </div>

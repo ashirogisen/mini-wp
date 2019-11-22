@@ -47,6 +47,7 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { config } from '../config'
 
 export default {
     name: 'Login',
@@ -75,7 +76,7 @@ export default {
 			
 			axios({
 				method: 'post',
-				url: `http://localhost:3000/gsignin`,
+				url: `${config.host}/gsignin`,
 				data: {
 					id_token: googleToken
 				}
@@ -93,9 +94,10 @@ export default {
 			console.log('OH NOES', error)
 		},
 		login() {
+			console.log(config)
 			axios({
 				method: 'post',
-				url: `http://localhost:3000/login`,
+				url: `${config.host}/login`,
 				data: {
 					email: this.loginData.email,
 					password: this.loginData.password

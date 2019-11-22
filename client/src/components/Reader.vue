@@ -2,7 +2,7 @@
     <div id="reader">
         <div class="container">
             <div class="row">
-                <div class="col-4">
+                <div v-if="readerSidebar" class="col-4">
                     <div id="mysites-menu-left" class="overflow-auto">
                         <h5 class="left-menus">Streams</h5><br>
                         <div id="sub-menu">
@@ -41,7 +41,7 @@
                             <div id="post" class="card w-90">
                                 <div id="card-container" class="card-body">
                                     <div id="card-text">
-                                        <h5 class="card-title">{{post.title}}</h5>
+                                        <h5 @click="toPostDetails(post)" style="cursor: pointer;" class="card-title">{{post.title}}</h5>
                                         <span class="badge badge-info" style="margin-bottom:5px;">By: {{post.user.name}}</span>
                                         <span class="badge badge-warning" style="width: 35px;"><i class="far fa-thumbs-up"></i> {{post.like.length}}</span>
                                     </div>
@@ -128,6 +128,10 @@
                 </div>
             </div>
         </div>
+        <!--PostDetails-->
+        <div id="post-details">
+          <PostDetails v-if="inPostDetails" :postDetails="postDetails" :backInPostDetails="backInPostDetails" />
+        </div>
     </div>
   
 </template>
@@ -135,6 +139,8 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { config } from '../config'
+import PostDetails from './PostDetails'
 
 export default {
     name: 'Reader',
@@ -144,19 +150,42 @@ export default {
             likedPost: [],
             followingPost: [],
             usersToFollow: [],
+            postDetails: null,
             inLikedPost: false,
             inPopularPost: false,
             inDiscover: false,
-            followedSites: false
+            followedSites: false,
+            inPostDetails: false,
+            readerSidebar: false
         }
     },
+    components: {
+      PostDetails
+    },
     methods: {
+        backInPostDetails () {
+            this.inDiscover = false
+            this.inPopularPost = true
+            this.inLikedPost = false
+            this.followedSites = false
+            this.readerSidebar = true
+            this.inPostDetails = false
+        },
+        toPostDetails (data) {
+            this.postDetails = data
+            this.inDiscover = false
+            this.inPopularPost = false
+            this.inLikedPost = false
+            this.followedSites = false
+            this.readerSidebar = false
+            this.inPostDetails = true
+        },
         follow(id) {
             const token = localStorage.getItem('token')
 
             axios({
                 method: 'patch',
-                url: `http://localhost:3000/follow/${id}`,
+                url: `${config.host}/follow/${id}`,
                 headers: {token}
             })
                 .then(({data}) =>{
@@ -175,10 +204,12 @@ export default {
             this.inPopularPost = false
             this.inLikedPost = false
             this.followedSites = true
+            this.readerSidebar = true
+            this.inPostDetails = false
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/posts/following`,
+                url: `${config.host}/posts/following`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -201,10 +232,12 @@ export default {
             this.inPopularPost = false
             this.inLikedPost = false
             this.followedSites = false
+            this.readerSidebar = true
+            this.inPostDetails = false
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/`,
+                url: `${config.host}/`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -217,10 +250,12 @@ export default {
             this.inPopularPost = false
             this.inDiscover = false
             this.followedSites = false
+            this.readerSidebar = true
+            this.inPostDetails = false
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/posts/liked`,
+                url: `${config.host}/posts/liked`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -232,10 +267,12 @@ export default {
             this.inPopularPost = true
             this.inDiscover = false
             this.followedSites = false
+            this.readerSidebar = true
+            this.inPostDetails = false
 
             axios({
                 method: 'get',
-                url: `http://localhost:3000/posts/popular`
+                url: `${config.host}/posts/popular`
             })
                 .then(({data}) => {
                     this.postData = data
@@ -248,7 +285,7 @@ export default {
 
             axios({
                 method: 'patch',
-                url: `http://localhost:3000/posts/like/${id}`,
+                url: `${config.host}/posts/like/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -260,7 +297,7 @@ export default {
 
             axios({
                 method: 'patch',
-                url: `http://localhost:3000/posts/like/${id}`,
+                url: `${config.host}/posts/like/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -272,7 +309,7 @@ export default {
 
             axios({
                 method: 'patch',
-                url: `http://localhost:3000/posts/like/${id}`,
+                url: `${config.host}/posts/like/${id}`,
                 headers: {token}
             })
                 .then(({data}) => {
@@ -299,7 +336,7 @@ export default {
 }
 #reader {
     background-color: #F6F7F7;
-    height: 1400px;
+    height: 400vh;
 }
 
 .container {
@@ -420,5 +457,14 @@ a.badge-dark {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+#like-btn {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.like-btns {
+  margin: 30px
 }
 </style>

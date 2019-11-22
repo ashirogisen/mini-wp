@@ -48,6 +48,7 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { config } from '../config'
 
 export default {
   name: 'Register',
@@ -65,7 +66,7 @@ export default {
 	register() {
 		axios({
 			method: 'post',
-			url: `http://localhost:3000/register`,
+			url: `${config.host}/register`,
 			data: {
 				name: this.registerData.name,
 				email: this.registerData.email,
